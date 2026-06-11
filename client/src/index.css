@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply text-slate-100 antialiased;
+  background-color: #020617;
+  /* Layered radial glows for depth instead of flat slate. */
+  background-image:
+    radial-gradient(60rem 60rem at 15% -10%, rgba(99, 102, 241, 0.18), transparent 60%),
+    radial-gradient(50rem 50rem at 110% 10%, rgba(168, 85, 247, 0.14), transparent 55%),
+    radial-gradient(40rem 40rem at 50% 120%, rgba(56, 189, 248, 0.10), transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Gradient brand accent — used for the "OS" in InterviewOS. */
+.brand-accent {
+  background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Frosted card surface. */
+.card {
+  @apply rounded-2xl border border-white/10 bg-slate-900/50 backdrop-blur-xl;
+  box-shadow: 0 8px 40px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Primary gradient button. */
+.btn-primary {
+  @apply rounded-xl px-4 py-3 font-semibold text-white transition-all;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  box-shadow: 0 8px 24px -8px rgba(99, 102, 241, 0.6);
+}
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 10px 30px -8px rgba(99, 102, 241, 0.75);
+}
+.btn-primary:disabled {
+  @apply opacity-40;
+}
+
+/* Subtle custom scrollbar. */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.4);
+  background-clip: padding-box;
+}

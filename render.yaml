@@ -1,0 +1,18 @@
+# Render Blueprint for the InterviewOS Socket.io server.
+# Deploy: render.com → New → Blueprint → connect this repo.
+services:
+  - type: web
+    name: interviewos-server
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false # set this in the Render dashboard (secret)
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: CLIENT_ORIGIN
+        sync: false # set to your Vercel URL, e.g. https://interviewos.vercel.app
