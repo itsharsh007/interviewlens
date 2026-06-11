@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Chart, registerables } from "chart.js";
 import type { InterviewReport, QuestionRecord } from "../types";
-import { countFillerWords, averageAnswerWords, saveReport } from "../lib/reports";
+import { countFillerWords, averageAnswerWords, saveReport, analyzeEmotions } from "../lib/reports";
+import { EMOTION_LABELS } from "../types";
 import type { InterviewResult } from "./Interview";
 
 Chart.register(...registerables);
@@ -98,6 +99,7 @@ export function Report({
   const answers = result.questions.map((q) => q.answer ?? "");
   const { total: fillerTotal, breakdown: fillerBreakdown } = countFillerWords(answers);
   const avgWords = averageAnswerWords(answers);
+  const emotion = analyzeEmotions(result.emotionTimeline);
 
   // Build and save full report once.
   useEffect(() => {
@@ -216,6 +218,43 @@ export function Report({
         <div className="card p-5">
           <h2 className="text-sm font-semibold mb-4 text-slate-300">Emotion timeline</h2>
           <canvas ref={chartRef} />
+        </div>
+      )}
+
+      {/* Overall emotional feedback */}
+      {result.emotionTimeline.length > 0 && (
+        <div className="card p-5">
+          <h2 className="text-sm font-semibold mb-1 text-slate-300">Overall emotional feedback</h2>
+          <p className="text-xs text-slate-500 mb-4">Read from your on-camera demeanor across the whole interview.</p>
+
+          {/* Average emotion mix */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+            {EMOTION_LABELS.map((label) => (
+              <div key={label} className="rounded-lg bg-white/5 p-3 text-center">
+                <div className="text-xl font-bold" style={{ color: EMOTION_COLORS[label] }}>
+                  {Math.round(emotion.averages[label] * 100)}%
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">{label}</div>
+              </div>
+            ))}
+          </div>
+
+          {emotion.strengths.length > 0 && (
+            <div className="mb-3">
+              <p className="text-xs font-semibold text-emerald-400 mb-1">What came across well</p>
+              <ul className="space-y-1">
+                {emotion.strengths.map((s, i) => <li key={i} className="text-sm text-slate-300">✓ {s}</li>)}
+              </ul>
+            </div>
+          )}
+          {emotion.improvements.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-amber-400 mb-1">Areas to improve</p>
+              <ul className="space-y-1">
+                {emotion.improvements.map((g, i) => <li key={i} className="text-sm text-slate-300">→ {g}</li>)}
+              </ul>
+            </div>
+          )}
         </div>
       )}
 

@@ -5,9 +5,10 @@ import { Login } from "./components/Login";
 import { Setup } from "./components/Setup";
 import { Interview, type InterviewResult } from "./components/Interview";
 import { Report } from "./components/Report";
+import { History } from "./components/History";
 import type { InterviewConfig } from "./types";
 
-type Screen = "setup" | "interview" | "report";
+type Screen = "setup" | "interview" | "report" | "history";
 
 export default function App() {
   const { user, loading, signOut } = useAuth();
@@ -55,12 +56,20 @@ export default function App() {
         <button onClick={handleNewInterview} className="text-xl font-bold hover:opacity-80 transition-opacity">
           Interview<span className="brand-accent">OS</span>
         </button>
-        <button
-          onClick={() => signOut().catch(() => {})}
-          className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
-        >
-          Sign out
-        </button>
+        <div className="flex items-center gap-5">
+          <button
+            onClick={() => setScreen("history")}
+            className="text-sm text-slate-400 hover:text-slate-100 transition-colors"
+          >
+            History
+          </button>
+          <button
+            onClick={() => signOut().catch(() => {})}
+            className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
+          >
+            Sign out
+          </button>
+        </div>
       </header>
 
       <main className="flex-1 flex flex-col overflow-auto">
@@ -88,6 +97,11 @@ export default function App() {
                 uid={user.uid}
                 onNewInterview={handleNewInterview}
               />
+            </div>
+          )}
+          {screen === "history" && (
+            <div key="history" className="flex-1 overflow-auto py-4">
+              <History uid={user.uid} onBack={handleNewInterview} />
             </div>
           )}
         </AnimatePresence>
